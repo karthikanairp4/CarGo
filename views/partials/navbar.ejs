@@ -1,0 +1,20 @@
+<header>
+    <nav class="navbar">
+        <div class="logo">CarGo <span class="highlight">O</span></div>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/cars/list">Car Listing</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/news">News</a></li>
+            <li><a href="/faq">FAQ</a></li>
+            <li><a href="/contact">Contact Us</a></li>
+        </ul>
+        <div class="nav-buttons">
+            <% if (user) { %>
+                <a href="/auth/logout" class="btn btn-primary">Logout</a>
+            <% } else { %>
+                <a href="/auth/login" class="btn btn-primary">Sign In</a>
+            <% } %>
+        </div>
+    </nav>
+</header>

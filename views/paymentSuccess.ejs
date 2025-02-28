@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/head', { title: "Payment Successful | Car Rental", pageStyle: "css/payment.css" }) %>
+<body>
+    <%- include('partials/navbar') %>
+
+    <section class="payment-status success">
+        <div class="status-container">
+            <h2>Payment Successful!</h2>
+            <p>Your payment has been processed successfully.</p>
+            <p>Thank you for booking with Turbo Rental!</p>
+            <a href="/cars/list" class="btn">View More Cars</a>
+        </div>
+    </section>
+
+    <%- include('partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<%- include('partials/head', { title: "Payment | Car Rental", pageStyle: "css/payment.css" }) %>
+
+<body>
+    <%- include('partials/navbar') %>
+
+    <section class="payment-page">
+        <div class="payment-container">
+            <h2>Enter Your Payment Details</h2>
+
+            <!-- Booking Details -->
+            <div class="booking-details">
+                <h3>Booking Summary</h3>
+                <p><strong>Car:</strong> <%= car.brand %> - <%= car.model %></p>
+                <p><strong>Price Per Day:</strong> $<%= car.price_per_day %></p>
+                <p><strong>Total Price:</strong> $<%= total_price %></p>
+                <p><strong>Start Date:</strong> <%= start_date %></p>
+                <p><strong>End Date:</strong> <%= end_date %></p>
+            </div>
+
+            <!-- Stripe Payment Form -->
+            <form id="payment-form">
+                <div id="card-element"></div>
+                <label for="zip">ZIP Code:</label>
+                <input type="text" id="zip" name="zip" placeholder="12345" required>
+                <button type="button" id="pay-button">Pay Now</button>
+            </form>
+
+            <p id="payment-message"></p>
+        </div>
+    </section>
+
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        const stripe = Stripe("<%= process.env.STRIPE_PUBLISHABLE_KEY %>");
+        const elements = stripe.elements();
+
+        // Create the card input field
+        const cardElement = elements.create('card', {
+            style: {
+                base: {
+                    fontSize: '16px',
+                    color: '#32325d',
+                    '::placeholder': {
+                        color: '#aab7c4',
+                    },
+                },
+                invalid: {
+                    color: '#fa755a',
+                },
+            },
+        });
+        cardElement.mount('#card-element');
+
+        document.getElementById("pay-button").addEventListener("click", async () => {
+    const zipCode = document.getElementById("zip").value;
+
+    const response = await fetch("/payment/create-payment-intent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+            total_price: "<%= total_price %>", 
+            zip: zipCode 
+        })
+    });
+
+    const { clientSecret } = await response.json();
+
+    const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: { 
+            card: cardElement,
+            billing_details: {
+                address: { postal_code: zipCode }
+            }
+        }
+    });
+
+    if (error) {
+        document.getElementById("payment-message").textContent = "❌ Payment failed: " + error.message;
+    } else if (paymentIntent.status === "requires_action") {
+        // If 3D Secure authentication is required
+        const { error: actionError } = await stripe.handleCardAction(clientSecret);
+        if (actionError) {
+            document.getElementById("payment-message").textContent = "❌ Payment authentication failed.";
+        } else {
+            window.location.href = "/payment/success";
+        }
+    } else if (paymentIntent.status === "succeeded") {
+        window.location.href = "/payment/success";
+    }
+});
+
+    </script>
+
+    <%- include('partials/footer') %>
+</body>
+</html>

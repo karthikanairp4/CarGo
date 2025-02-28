@@ -1,0 +1,63 @@
+<%- include('partials/head', { title: "Book Car | CarGo", pageStyle: "css/carBooking.css" }) %>
+<body>
+
+    <%- include('partials/navbar') %>
+
+    <section class="booking-page">
+        <div class="car-details-container">
+            <img src="<%= car.image %>" alt="<%= car.brand %> - <%= car.model %>">
+            <div class="car-info">
+                <h2><%= car.brand %> - <%= car.model %></h2>
+                <p>Price per Day: $<%= car.price_per_day %></p>
+                <p>Availability: <%= car.availability ? "Available" : "Not Available" %></p>
+            </div>
+        </div>
+
+        <div class="booking-form-container">
+            <h2>Book Your Car</h2>
+            <form action="/payment/checkout" method="POST">
+                <input type="hidden" name="car_id" value="<%= car.id %>">
+                <input type="hidden" name="user_id" value="<%= user ? user.id : '' %>">
+            
+                <!-- Ensure values are captured from input fields -->
+                <label for="start_date">Start Date:</label>
+                <input type="date" id="start_date" name="start_date" required>
+            
+                <label for="end_date">End Date:</label>
+                <input type="date" id="end_date" name="end_date" required>
+            
+                <label for="total_price">Total Price:</label>
+                <input type="text" id="total_price" name="total_price" readonly>
+            
+                <button type="submit">Proceed to Payment</button>
+            </form>
+            
+            
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const startDate = document.querySelector("input[name='start_date']");
+            const endDate = document.querySelector("input[name='end_date']");
+            const totalPriceField = document.getElementById("total_price");
+            const pricePerDay = <%= car.price_per_day %>;
+
+            function calculateTotal() {
+                if (startDate.value && endDate.value) {
+                    const start = new Date(startDate.value);
+                    const end = new Date(endDate.value);
+                    const days = Math.max(1, (end - start) / (1000 * 60 * 60 * 24));
+                    totalPriceField.value = (days * pricePerDay).toFixed(2);
+                }
+            }
+
+            startDate.addEventListener("change", calculateTotal);
+            endDate.addEventListener("change", calculateTotal);
+        });
+    </script>
+
+    <%- include('partials/footer') %>
+
+</body>
+</html>

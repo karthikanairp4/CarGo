@@ -1,0 +1,107 @@
+/* General Styling */
+body {
+    background: url('/images/bg.jpg') no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* Login Container */
+.register-container {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 40px;
+    border-radius: 10px;
+    text-align: center;
+    width: 350px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Heading */
+.register-container h2 {
+    color: white;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.register-container p {
+    color: white;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+/* Input Fields */
+.register-container input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+/* Remember Me & Forgot Password */
+.remember-forgot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+/* Fixes checkbox alignment */
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Ensures checkbox is correctly sized */
+.remember-me input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+    accent-color: #007bff; /* Makes checkbox blue */
+}
+
+/* Forgot Password link styling */
+.remember-forgot a {
+    text-decoration: none;
+    color: #007bff;
+    font-size: 14px;
+}
+
+
+/* Login Button */
+.register-container button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    border: none;
+    background: #007bff;
+    color: white;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.register-container button:hover {
+    background: #0056b3;
+}
+
+/* Signup Link */
+.login-text {
+    color: white;
+    margin-top: 15px;
+}
+
+.login-text a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+
