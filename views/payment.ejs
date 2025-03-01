@@ -7,6 +7,9 @@
         <div class="payment-container">
             <h2>Enter Your Payment Details</h2>
 
+            <!-- Debug Output -->
+            <!-- <p><strong>Debug Booking ID:</strong> <%= booking_id %></p> -->
+
             <!-- Booking Details -->
             <div class="booking-details">
                 <h3>Booking Summary</h3>
@@ -15,11 +18,17 @@
                 <p><strong>Total Price:</strong> $<%= total_price %></p>
                 <p><strong>Start Date:</strong> <%= start_date %></p>
                 <p><strong>End Date:</strong> <%= end_date %></p>
+                <p><strong>Booking id:</strong> <%= booking_id %></p>
             </div>
 
             <!-- Stripe Payment Form -->
             <form id="payment-form">
+
                 <div id="card-element"></div>
+                <input type="hidden" id="booking_id" name="booking_id" value="<%= booking_id %>">
+                <input type="hidden" id="total_price" name="total_price" value="<%= total_price %>">
+
+
                 <label for="zip">ZIP Code:</label>
                 <input type="text" id="zip" name="zip" placeholder="12345" required>
                 <button type="button" id="pay-button">Pay Now</button>
@@ -52,43 +61,66 @@
         cardElement.mount('#card-element');
 
         document.getElementById("pay-button").addEventListener("click", async () => {
-    const zipCode = document.getElementById("zip").value;
+            const zipCode = document.getElementById("zip").value;
+            const booking_id = document.getElementById("booking_id").value;
+            const total_price = document.getElementById("total_price").value;
 
-    const response = await fetch("/payment/create-payment-intent", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-            total_price: "<%= total_price %>", 
-            zip: zipCode 
-        })
-    });
+            console.log("📌 Sending Payment Data:", { booking_id, total_price, zipCode });
 
-    const { clientSecret } = await response.json();
+            if (!booking_id) {
+        document.getElementById("payment-message").textContent = "❌ Error: Missing Booking ID.";
+        return;
+    }
+            // Step 1: Create Payment Intent
+            const response = await fetch("/payment/create-payment-intent", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 
+                    booking_id: booking_id,
+                    total_price: parseFloat("<%= total_price %>"), 
+                    zip: zipCode 
+                })
+            });
 
-    const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: { 
-            card: cardElement,
-            billing_details: {
-                address: { postal_code: zipCode }
+            const { clientSecret, payment_id } = await response.json();
+
+            // Step 2: Process Payment
+            const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
+                payment_method: { 
+                    card: cardElement,
+                    billing_details: { address: { postal_code: zipCode } }
+                }
+            });
+
+            if (error) {
+                document.getElementById("payment-message").textContent = "❌ Payment failed: " + error.message;
+            } else if (paymentIntent.status === "requires_action") {
+                // 3D Secure authentication
+                const { error: actionError } = await stripe.handleCardAction(clientSecret);
+                if (actionError) {
+                    document.getElementById("payment-message").textContent = "❌ Payment authentication failed.";
+                } else {
+                    confirmPayment(payment_id);
+                }
+            } else if (paymentIntent.status === "succeeded") {
+                confirmPayment(payment_id);
+            }
+        });
+
+        // Step 3: Confirm Payment in Database
+        async function confirmPayment(payment_id) {
+            const confirmResponse = await fetch('/payment/confirm', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ paymentIntentId: payment_id })
+            });
+
+            if (confirmResponse.ok) {
+                window.location.href = "/payment/success";
+            } else {
+                document.getElementById("payment-message").textContent = "❌ Error confirming payment.";
             }
         }
-    });
-
-    if (error) {
-        document.getElementById("payment-message").textContent = "❌ Payment failed: " + error.message;
-    } else if (paymentIntent.status === "requires_action") {
-        // If 3D Secure authentication is required
-        const { error: actionError } = await stripe.handleCardAction(clientSecret);
-        if (actionError) {
-            document.getElementById("payment-message").textContent = "❌ Payment authentication failed.";
-        } else {
-            window.location.href = "/payment/success";
-        }
-    } else if (paymentIntent.status === "succeeded") {
-        window.location.href = "/payment/success";
-    }
-});
-
     </script>
 
     <%- include('partials/footer') %>

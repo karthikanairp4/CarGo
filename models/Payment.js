@@ -6,7 +6,14 @@ const User = require('./User');
 const Payment = sequelize.define('Payment', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     amount: { type: DataTypes.DECIMAL(10,2), allowNull: false },
-    payment_status: { type: DataTypes.ENUM('pending', 'completed', 'paid', 'failed', 'refunded'), defaultValue: 'pending' },
+    payment_status: { 
+        type: DataTypes.ENUM('pending', 'completed', 'paid', 'failed', 'refunded'), 
+        defaultValue: 'pending' 
+    },
+    transaction_id: {  // ✅ Add this field
+        type: DataTypes.STRING,
+        allowNull: true,
+    }
 }, {
     timestamps: true,
     tableName: 'Payments',

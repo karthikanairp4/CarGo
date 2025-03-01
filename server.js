@@ -8,6 +8,7 @@ const carRoutes = require('./routes/cars');
 const authRoutes = require('./routes/auth');
 const indexRoutes = require('./routes/index');
 const paymentRoutes = require('./routes/payment');
+const bookingRoutes = require('./routes/booking');
 const cookieParser = require('cookie-parser');
 
 require('dotenv').config();
@@ -43,6 +44,7 @@ app.use('/', indexRoutes);
 app.use('/auth', authRoutes);
 app.use('/cars', carRoutes);
 app.use('/payment', paymentRoutes);
+app.use('/booking', bookingRoutes);
 
 // Start server
 const PORT = process.env.PORT || 3000;
