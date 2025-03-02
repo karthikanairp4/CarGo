@@ -1,15 +1,16 @@
 const Car = require('../models/Car');
 const Booking = require('../models/Booking');
+const { Op } = require('sequelize');
 
 // Get All Available Cars
 exports.listAvailableCars = async (req, res) => {
     try {
         const cars = await Car.findAll({
-            where: { availability: true }, // Fetch only available cars
+            where: { availability: { [Op.gt]: 0 } }, // Fetch only available cars
         });
 
         res.render('carListing', {
-            title: "Available Cars | Car Rental",
+            title: "Available Cars | CarGo",
             cars
         });
     } catch (err) {

@@ -6,7 +6,7 @@ const Car = sequelize.define('Car', {
     model: { type: DataTypes.STRING, allowNull: false },
     brand: { type: DataTypes.STRING, allowNull: false },
     price_per_day: { type: DataTypes.DECIMAL(10,2), allowNull: false },
-    availability: { type: DataTypes.BOOLEAN, defaultValue: true },
+    availability: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 0 },
     image: { type: DataTypes.STRING, allowNull: true },
 }, {
     timestamps: false,

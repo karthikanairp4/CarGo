@@ -6,6 +6,7 @@ const paymentController = require('../controllers/paymentController');
 router.post('/create-payment-intent',verifyToken, paymentController.createPaymentIntent);
 
 router.post('/checkout', verifyToken, paymentController.showPaymentPage);
+router.get('/checkout', verifyToken, paymentController.showPaymentPageToComplete);
 router.post('/process', verifyToken,paymentController.processPayment);
 router.post('/confirm', verifyToken, paymentController.confirmPayment);
 router.get('/success', (req, res) => {
