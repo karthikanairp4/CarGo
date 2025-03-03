@@ -37,6 +37,58 @@ exports.registerUser = [
     }
 ];
 
+// exports.loginUser = [
+
+//     body('email').isEmail().withMessage('Invalid email format').normalizeEmail(),
+//     body('password').notEmpty().withMessage('Password is required'),
+
+//     async (req, res) => {
+//         const errors = validationResult(req);
+//         if (!errors.isEmpty()) {
+//             req.flash('error', errors.array().map(err => err.msg).join(', '));
+//             console.log("Error in login")
+//             return res.redirect('/auth/login');
+//             // return res.json({ message: "Error in login" });
+//         }
+
+//         const { email, password } = req.body;
+
+//         try {
+//             const user = await User.findOne({ where: { email } });
+//             if (!user) {
+//                 req.flash('error', 'Invalid email or password');
+//                 // return res.json({ message: "Invalid email or password" });
+//                 return res.redirect('/auth/login');
+//             }
+
+//             const passwordMatch = await bcrypt.compare(password, user.password);
+//             if (!passwordMatch) {
+//                 req.flash('error', 'Invalid email or password');
+//                 return res.redirect('/auth/login');
+//                 // return res.json({ message: "Invalid email or password" });
+//             }
+
+//             // Generate JWT Token
+//             const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
+//             console.log(token);
+
+//             // Store token in cookie
+//             res.cookie('token', token, { httpOnly: true });
+
+//             req.flash('success', `Welcome, ${user.name}`);
+//             req.session.user = { id: user.id, name: user.name, email: user.email };
+//             // res.json({ message: "Login successful" });
+//             // return user.role === 'admin' ? res.redirect('/admin/dashboard') : res.redirect('/user/dashboard');
+//             return user.role === 'admin' ? res.redirect('/admin/dashboard') : res.redirect('/');
+//         } catch (err) {
+//             console.error(err);
+//             req.flash('error', 'An error occurred.');
+//             res.redirect('/auth/login');
+//             // return res.json({ message: "An error occurred" });
+//         }
+//     }
+// ];
+
 exports.loginUser = [
     body('email').isEmail().withMessage('Invalid email format').normalizeEmail(),
     body('password').notEmpty().withMessage('Password is required'),
@@ -45,9 +97,8 @@ exports.loginUser = [
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             req.flash('error', errors.array().map(err => err.msg).join(', '));
-            console.log("Error in login")
+            console.log("Error in login");
             return res.redirect('/auth/login');
-            // return res.json({ message: "Error in login" });
         }
 
         const { email, password } = req.body;
@@ -56,7 +107,6 @@ exports.loginUser = [
             const user = await User.findOne({ where: { email } });
             if (!user) {
                 req.flash('error', 'Invalid email or password');
-                // return res.json({ message: "Invalid email or password" });
                 return res.redirect('/auth/login');
             }
 
@@ -64,30 +114,48 @@ exports.loginUser = [
             if (!passwordMatch) {
                 req.flash('error', 'Invalid email or password');
                 return res.redirect('/auth/login');
-                // return res.json({ message: "Invalid email or password" });
             }
 
-            // Generate JWT Token
-            const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
-            console.log(token);
+            // ✅ Generate JWT Token with user role
+            const token = jwt.sign(
+                { id: user.id, role: user.role }, 
+                process.env.JWT_SECRET, 
+                { expiresIn: process.env.JWT_EXPIRES_IN }
+            );
 
-            // Store token in cookie
+            console.log("Generated Token:", token);
+
+            // ✅ Store token in cookies
             res.cookie('token', token, { httpOnly: true });
 
-            req.flash('success', `Welcome, ${user.name}`);
-            req.session.user = { id: user.id, name: user.name, email: user.email };
-            // res.json({ message: "Login successful" });
-            // return user.role === 'admin' ? res.redirect('/admin/dashboard') : res.redirect('/user/dashboard');
-            return user.role === 'admin' ? res.redirect('/') : res.redirect('/');
-            return res.redirect('/');
+            // ✅ Store user in session
+            req.session.user = {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: user.role
+            };
+
+            console.log("🔍 Logged-in User:", req.session.user);
+
+            // ✅ Redirect based on user role
+            if (user.role === 'admin') {
+                console.log("✅ Admin Login - Redirecting to Admin Dashboard");
+                return res.redirect('/admin/dashboard'); // Correct redirect for admin
+            } else {
+                console.log("✅ User Login - Redirecting to User Dashboard");
+                return res.redirect('/');  // Correct redirect for user
+            }
+
         } catch (err) {
-            console.error(err);
+            console.error("❌ Login Error:", err);
             req.flash('error', 'An error occurred.');
-            res.redirect('/auth/login');
-            // return res.json({ message: "An error occurred" });
+            return res.redirect('/auth/login');
         }
     }
 ];
+
+
 
 exports.getRegisterPage = (req, res) => {
     res.render('register');

@@ -21,58 +21,43 @@ exports.getUserBookings = async (req, res) => {
     }
 };
 
-exports.editBookingPage = async (req, res) => {
+exports.requestBookingEdit = async (req, res) => {
     try {
-        const { booking_id } = req.params;
-        const booking = await Booking.findByPk(booking_id, { include: Car });
-
-        if (!booking) {
-            return res.status(404).send("Booking not found.");
-        }
-
-        res.render('editBooking', { title: "Edit Booking | Car Rental", booking });
-    } catch (error) {
-        console.error("❌ Error loading edit booking page:", error);
-        res.status(500).send("Error loading booking details.");
-    }
-};
-
-exports.updateBooking = async (req, res) => {
-    try {
-        const { booking_id } = req.params;
-        const { start_date, end_date } = req.body;
-
+        const { booking_id, new_start_date, new_end_date } = req.body;
         const booking = await Booking.findByPk(booking_id);
-        if (!booking) {
-            return res.status(404).send("Booking not found.");
-        }
 
-        booking.start_date = start_date;
-        booking.end_date = end_date;
+        if (!booking) return res.status(404).send("Booking not found");
+
+        // Mark request as pending for admin approval
+        // booking.request_status = "Pending";
+        booking.request_status = "Edit Requested";
+        booking.new_start_date = new_start_date;
+        booking.new_end_date = new_end_date;
         await booking.save();
 
-        res.redirect('/myBookings');
+        res.json({ message: "Booking modification request sent to admin" });
     } catch (error) {
-        console.error("❌ Error updating booking:", error);
-        res.status(500).send("Error updating booking.");
+        console.error("Error requesting booking edit:", error);
+        res.status(500).send("Error processing request");
     }
 };
 
-
-exports.cancelBooking = async (req, res) => {
+// User Requests Cancellation
+exports.requestBookingCancel = async (req, res) => {
     try {
-        const { booking_id } = req.params;
+        const { booking_id } = req.body;
         const booking = await Booking.findByPk(booking_id);
 
-        if (!booking) {
-            return res.status(404).send("Booking not found.");
-        }
+        if (!booking) return res.status(404).send("Booking not found");
 
-        await booking.destroy(); // Delete the booking
-        res.redirect('/myBookings');
+        // booking.request_status = "Pending";
+        booking.request_status = "Cancel Requested";
+        await booking.save();
+
+        res.json({ message: "Cancellation request sent to admin" });
     } catch (error) {
-        console.error("❌ Error canceling booking:", error);
-        res.status(500).send("Error canceling booking.");
+        console.error("Error requesting cancellation:", error);
+        res.status(500).send("Error processing request");
     }
 };
 

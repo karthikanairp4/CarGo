@@ -9,6 +9,7 @@ const authRoutes = require('./routes/auth');
 const indexRoutes = require('./routes/index');
 const paymentRoutes = require('./routes/payment');
 const bookingRoutes = require('./routes/booking');
+const adminRoutes = require("./routes/admin");
 const cookieParser = require('cookie-parser');
 
 require('dotenv').config();
@@ -45,6 +46,7 @@ app.use('/auth', authRoutes);
 app.use('/cars', carRoutes);
 app.use('/payment', paymentRoutes);
 app.use('/booking', bookingRoutes);
+app.use("/admin", adminRoutes);
 
 // Start server
 const PORT = process.env.PORT || 3000;

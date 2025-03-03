@@ -35,4 +35,22 @@ exports.verifyAdmin = (req, res, next) => {
     });
 };
 
+// exports.verifyAdmin = (req, res, next) => {
+//     if (!req.user) {
+//         console.error("❌ No user found in request.");
+//         req.flash('error', 'Unauthorized access.');
+//         return res.redirect('/');
+//     }
+
+//     console.log("🔍 Checking Admin Role:", req.user.role); // Debugging line
+
+//     if (req.user.role !== 'admin') {
+//         req.flash('error', 'Access denied.');
+//         return res.redirect('/');
+//     }
+
+//     next();
+// };
+
+
 

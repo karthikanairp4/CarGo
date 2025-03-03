@@ -25,13 +25,28 @@
                             <td><%= booking.Car.brand %> - <%= booking.Car.model %></td>
                             <td><%= booking.start_date %> to <%= booking.end_date %></td>
                             <td>$<%= booking.total_price %></td>
-                            <td><%= booking.Payment ? booking.Payment.payment_status : 'Pending' %></td>
+                            <td><%= booking.status %></td>
                             <td>
                                 <% if (!booking.Payment || booking.Payment.payment_status === 'pending') { %>
                                     <a href="/payment/checkout?booking_id=<%= booking.id %>" class="btn btn-primary">Complete Payment</a>
+                                <% } else if (booking.status === "Edit Requested" || booking.status === "Cancel Requested") { %>
+                                    <p>Request Pending Admin Approval</p>
                                 <% } else { %>
-                                    <a href="/bookings/edit/<%= booking.id %>" class="btn btn-secondary">Edit</a>
-                                    <a href="/bookings/cancel/<%= booking.id %>" class="btn btn-danger">Cancel</a>
+                                    <!-- Edit Booking Form -->
+                                    <form action="/booking/request-edit" method="POST">
+                                        <input type="hidden" name="booking_id" value="<%= booking.id %>">
+                                        <label>New Start Date:</label>
+                                        <input type="date" name="new_start_date" required>
+                                        <label>New End Date:</label>
+                                        <input type="date" name="new_end_date" required>
+                                        <button type="submit" class="btn btn-secondary">Request Edit</button>
+                                    </form>
+
+                                    <!-- Cancel Booking Form -->
+                                    <form action="/booking/request-cancel" method="POST">
+                                        <input type="hidden" name="booking_id" value="<%= booking.id %>">
+                                        <button type="submit" class="btn btn-danger">Request Cancel</button>
+                                    </form>
                                 <% } %>
                             </td>
                         </tr>

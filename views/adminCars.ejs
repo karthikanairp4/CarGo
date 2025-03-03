@@ -1,0 +1,36 @@
+<%- include('partials/head', { title: "Manage Cars | Admin", pageStyle: "css/admin.css" }) %>
+<body>
+    <h2>Manage Cars</h2>
+    <a href="/admin/cars/add" class="btn btn-primary">Add New Car</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Brand</th>
+                <th>Model</th>
+                <th>Price Per Day</th>
+                <th>Availability</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% cars.forEach(car => { %>
+                <tr>
+                    <td><%= car.brand %></td>
+                    <td><%= car.model %></td>
+                    <td>$<%= car.price_per_day %></td>
+                    <td><%= car.availability %></td>
+                    <td>
+                        <a href="/admin/cars/edit/<%= car.id %>" class="btn btn-secondary">Edit</a>
+                        <form action="/admin/cars/delete/<%= car.id %>" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+
+    <%- include('partials/footer') %>
+</body>
+</html>

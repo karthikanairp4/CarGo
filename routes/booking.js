@@ -4,8 +4,13 @@ const { verifyToken } = require('../middleware/authMiddleware');
 const bookingController = require('../controllers/bookingController');
 
 router.get('/my-bookings', verifyToken, bookingController.getUserBookings);
-router.get('/bookings/edit/:booking_id', verifyToken, bookingController.editBookingPage);
-router.post('/bookings/edit/:booking_id', verifyToken, bookingController.updateBooking);
-router.get('/bookings/cancel/:booking_id', verifyToken, bookingController.cancelBooking);
+// router.get("/edit/:booking_id", verifyToken, bookingController.showEditBookingPage);
+
+// ✅ Route to show cancel confirmation page
+// router.get("/cancel/:booking_id", verifyToken, bookingController.showCancelBookingPage);
+
+
+router.post("/request-edit", verifyToken, bookingController.requestBookingEdit);
+router.post("/request-cancel", verifyToken, bookingController.requestBookingCancel);
 
 module.exports = router;

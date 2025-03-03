@@ -1,0 +1,26 @@
+<%- include('partials/head', { title: "Add New Car", pageStyle: "css/admin.css" }) %>
+<body>
+    <h2>Add New Car</h2>
+    <form action="/admin/cars/add" method="POST">
+        <label>Brand:</label>
+        <input type="text" name="brand" required>
+
+        <label>Model:</label>
+        <input type="text" name="model" required>
+
+        <label>Price Per Day:</label>
+        <input type="number" name="price_per_day" required>
+
+        <label>Availability:</label>
+        <input type="number" name="availability" required>
+
+        <label>Image URL:</label>
+        <input type="text" name="image">
+
+        <button type="submit">Add Car</button>
+    </form>
+    <a href="/admin/cars">Back to Car List</a>
+
+    <%- include('partials/footer') %>
+</body>
+</html>

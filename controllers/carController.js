@@ -95,3 +95,75 @@ exports.addCar = async (req, res) => {
         res.redirect('/admin/dashboard');
     }
 };
+
+
+//Admin management
+
+// ✅ List All Cars for Admin
+exports.listAllCars = async (req, res) => {
+    try {
+        const cars = await Car.findAll();
+        res.render("adminCars", { title: "Manage Cars | Admin", cars });
+    } catch (error) {
+        console.error("Error fetching cars:", error);
+        res.status(500).send("Error loading cars");
+    }
+};
+
+// ✅ Show Add Car Form
+exports.showAddCarForm = (req, res) => {
+    res.render("addCar", { title: "Add New Car" });
+};
+
+// ✅ Handle Add Car Request
+exports.addCar = async (req, res) => {
+    try {
+        const { brand, model, price_per_day, availability, image } = req.body;
+        await Car.create({ brand, model, price_per_day, availability, image });
+        res.redirect("/admin/cars");
+    } catch (error) {
+        console.error("Error adding car:", error);
+        res.status(500).send("Error adding car");
+    }
+};
+
+// ✅ Show Edit Car Form
+exports.showEditCarForm = async (req, res) => {
+    try {
+        const car = await Car.findByPk(req.params.id);
+        if (!car) return res.status(404).send("Car not found");
+        res.render("editCar", { title: "Edit Car", car });
+    } catch (error) {
+        console.error("Error loading edit form:", error);
+        res.status(500).send("Error loading car data");
+    }
+};
+
+// ✅ Handle Edit Car Request
+exports.editCar = async (req, res) => {
+    try {
+        const { brand, model, price_per_day, availability, image } = req.body;
+        const car = await Car.findByPk(req.params.id);
+        if (!car) return res.status(404).send("Car not found");
+
+        await car.update({ brand, model, price_per_day, availability, image });
+        res.redirect("/admin/cars");
+    } catch (error) {
+        console.error("Error editing car:", error);
+        res.status(500).send("Error updating car details");
+    }
+};
+
+// ✅ Handle Delete Car Request
+exports.deleteCar = async (req, res) => {
+    try {
+        const car = await Car.findByPk(req.params.id);
+        if (!car) return res.status(404).send("Car not found");
+
+        await car.destroy();
+        res.redirect("/admin/cars");
+    } catch (error) {
+        console.error("Error deleting car:", error);
+        res.status(500).send("Error deleting car");
+    }
+};

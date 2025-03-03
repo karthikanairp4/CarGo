@@ -9,7 +9,7 @@ const Booking = sequelize.define('Booking', {
     end_date: { type: DataTypes.DATEONLY, allowNull: false },
     total_price: { type: DataTypes.DECIMAL(10,2), allowNull: false },
     status: { type: DataTypes.ENUM('pending', 'confirmed', 'canceled', 'completed'), defaultValue: 'pending' },
-    request_status: { type: DataTypes.ENUM("None", "Pending", "Approved", "Rejected"), defaultValue: "None" },
+    request_status: { type: DataTypes.ENUM("None", "Edit Requested", "Cancel Requested", "Approved", "Rejected"), defaultValue: "None" },
 }, {
     timestamps: true,
     tableName: 'Bookings',
