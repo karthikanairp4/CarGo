@@ -13,8 +13,8 @@
                     <th>Booking ID</th>
                     <th>User</th>
                     <th>Car</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
+                    <th>Current Dates</th>
+                    <th>Requested New Dates</th> <!-- Show new dates -->
                     <th>Total Price</th>
                     <th>Request Type</th>
                     <th>Action</th>
@@ -29,10 +29,16 @@
                             <td><%= request.id %></td>
                             <td><%= request.User.email %></td>
                             <td><%= request.Car.brand %> - <%= request.Car.model %></td>
-                            <td><%= request.start_date %></td>
-                            <td><%= request.end_date %></td>
+                            <td><%= request.start_date %> to <%= request.end_date %></td>
+                            <td>
+                                <% if (request.new_start_date && request.new_end_date) { %>
+                                    <%= request.new_start_date %> to <%= request.new_end_date %>
+                                <% } else { %>
+                                    No Edit Requested
+                                <% } %>
+                            </td>
                             <td>$<%= request.total_price %></td>
-                            <td><%= request.status === "Edit Requested" ? "Edit Request" : "Cancel Request" %></td>
+                            <td><%= request.request_status %></td>
                             <td>
                                 <form action="/admin/approve-request" method="POST">
                                     <input type="hidden" name="booking_id" value="<%= request.id %>">
@@ -47,6 +53,8 @@
                     <% }) %>
                 <% } %>
             </tbody>
+            
+            
         </table>
     </section>
     <%- include('partials/footer') %>
@@ -56,27 +64,27 @@
         document.querySelectorAll(".approve-btn, .reject-btn").forEach(button => {
             button.addEventListener("click", async function(event) {
                 event.preventDefault();
-    
+
                 const form = this.closest("form");
                 const bookingId = form.querySelector("input[name='booking_id']").value;
                 const actionUrl = form.getAttribute("action");
-    
+
                 if (!bookingId) {
                     alert("❌ Error: Booking ID is missing.");
                     return;
                 }
-    
+
                 console.log("📌 Sending Request:", { booking_id: bookingId, action: actionUrl });
-    
+
                 const response = await fetch(actionUrl, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ booking_id: bookingId })
                 });
-    
+
                 const result = await response.json();
                 console.log("📌 Server Response:", result);
-    
+
                 if (response.ok) {
                     alert("✅ Request processed successfully!");
                     location.reload();
@@ -86,7 +94,9 @@
             });
         });
     });
-    </script>
+</script>
+
+
     
     
     

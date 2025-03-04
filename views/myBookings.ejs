@@ -7,7 +7,7 @@
         <h2>My Bookings</h2>
 
         <% if (bookings.length === 0) { %>
-            <p>No bookings found.</p>
+            <p>No active bookings found.</p>
         <% } else { %>
             <table>
                 <thead>
@@ -25,27 +25,37 @@
                             <td><%= booking.Car.brand %> - <%= booking.Car.model %></td>
                             <td><%= booking.start_date %> to <%= booking.end_date %></td>
                             <td>$<%= booking.total_price %></td>
-                            <td><%= booking.status %></td>
+                            <td>
+                                <% if (booking.status === "Cancelled") { %>
+                                    <span class="status-text cancelled-text">❌ Cancelled</span>
+                                <% } else if (booking.request_status === "Rejected") { %>
+                                    <span class="status-text rejected-text">❌ Edit Rejected</span>
+                                <% } else if (booking.request_status === "Edit Requested") { %>
+                                    <span class="status-text pending-text">⏳ Edit Pending</span>
+                                <% } else if (booking.request_status === "Cancel Requested") { %>
+                                    <span class="status-text pending-text">⏳ Cancel Pending</span>
+                                <% } else { %>
+                                    <span class="status-text confirmed-text">✅ Confirmed</span>
+                                <% } %>
+                            </td>
                             <td>
                                 <% if (!booking.Payment || booking.Payment.payment_status === 'pending') { %>
-                                    <a href="/payment/checkout?booking_id=<%= booking.id %>" class="btn btn-primary">Complete Payment</a>
-                                <% } else if (booking.status === "Edit Requested" || booking.status === "Cancel Requested") { %>
-                                    <p>Request Pending Admin Approval</p>
+                                    <a href="/payment/checkout?booking_id=<%= booking.id %>" class="btn btn-primary">💳 Complete Payment</a>
+                                <% } else if (booking.request_status === "Edit Requested" || booking.request_status === "Cancel Requested") { %>
+                                    <p>⏳ Request Pending Admin Approval</p>
                                 <% } else { %>
-                                    <!-- Edit Booking Form -->
                                     <form action="/booking/request-edit" method="POST">
                                         <input type="hidden" name="booking_id" value="<%= booking.id %>">
-                                        <label>New Start Date:</label>
-                                        <input type="date" name="new_start_date" required>
-                                        <label>New End Date:</label>
-                                        <input type="date" name="new_end_date" required>
+                                        <label for="new_start_date">New Start Date:</label>
+                                        <input type="date" id="new_start_date_<%= booking.id %>" name="new_start_date" required>
+                                        <label for="new_end_date">New End Date:</label>
+                                        <input type="date" id="new_end_date_<%= booking.id %>" name="new_end_date" required>
                                         <button type="submit" class="btn btn-secondary">Request Edit</button>
                                     </form>
 
-                                    <!-- Cancel Booking Form -->
                                     <form action="/booking/request-cancel" method="POST">
                                         <input type="hidden" name="booking_id" value="<%= booking.id %>">
-                                        <button type="submit" class="btn btn-danger">Request Cancel</button>
+                                        <button type="submit" class="btn btn-danger">❌ Request Cancel</button>
                                     </form>
                                 <% } %>
                             </td>
@@ -55,6 +65,48 @@
             </table>
         <% } %>
     </section>
+
+    <!-- ✅ NEW: Refunded Transactions Section -->
+    <section class="refunds-section">
+        <h2>Refunded Transactions</h2>
+        <% if (refundedPayments.length === 0) { %>
+            <p>No refunds processed.</p>
+        <% } else { %>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Transaction ID</th>
+                        <th>Amount</th>
+                        <th>Refund Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% refundedPayments.forEach(payment => { %>
+                        <tr>
+                            <td><%= payment.transaction_id %></td>
+                            <td>$<%= payment.amount %></td>
+                            <td><%= payment.updatedAt.toDateString() %></td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } %>
+    </section>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".inline-form").forEach(form => {
+                form.addEventListener("submit", function (event) {
+                    const startDate = form.querySelector("input[name='new_start_date']");
+                    const endDate = form.querySelector("input[name='new_end_date']");
+
+                    if (startDate && endDate && new Date(endDate.value) <= new Date(startDate.value)) {
+                        event.preventDefault();
+                        alert("❌ End Date must be after Start Date.");
+                    }
+                });
+            });
+        });
+    </script>
 
     <%- include('partials/footer') %>
 </body>
