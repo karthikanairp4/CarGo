@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
-// const { registerLimiter } = require('../middleware/authMiddleware');
 
 // Register Route
 router.get('/register', userController.getRegisterPage);

@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-const rateLimit = require('express-rate-limit');
 
 exports.verifyToken = (req, res, next) => {
     const token = req.cookies.token;  // Get token from cookies
@@ -36,11 +35,7 @@ exports.verifyAdmin = (req, res, next) => {
     });
 };
 
-const registerLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 5, // Limit each IP to 5 requests per window
-    message: "Too many registration attempts. Please try again later."
-});
+
 
 
 
