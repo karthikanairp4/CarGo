@@ -1,4 +1,4 @@
-<%- include('partials/head', { title: "Payment | Car Rental", pageStyle: "css/payment.css" }) %>
+<%- include('partials/head', { title: "Payment | CarGo", pageStyle: "css/payment.css" }) %>
 
 <body>
     <%- include('partials/navbar') %>
@@ -7,8 +7,6 @@
         <div class="payment-container">
             <h2>Enter Your Payment Details</h2>
 
-            <!-- Debug Output -->
-            <!-- <p><strong>Debug Booking ID:</strong> <%= booking_id %></p> -->
 
             <!-- Booking Details -->
             <div class="booking-details">
@@ -18,21 +16,26 @@
                 <p><strong>Total Price:</strong> $<%= total_price %></p>
                 <p><strong>Start Date:</strong> <%= start_date %></p>
                 <p><strong>End Date:</strong> <%= end_date %></p>
-                <p><strong>Booking id:</strong> <%= booking_id %></p>
+                <!-- <p><strong>Booking id:</strong> <%= booking_id %></p> -->
             </div>
 
-            <!-- Stripe Payment Form -->
             <form id="payment-form">
+                <label for="name">Name on Card:</label>
+                <input type="text" id="name" name="name" placeholder="Karthika Nair" required>
 
                 <div id="card-element"></div>
                 <input type="hidden" id="booking_id" name="booking_id" value="<%= booking_id %>">
                 <input type="hidden" id="total_price" name="total_price" value="<%= total_price %>">
-
-
+            
                 <label for="zip">ZIP Code:</label>
                 <input type="text" id="zip" name="zip" placeholder="12345" required>
+            
+                
+        
+            
                 <button type="button" id="pay-button">Pay Now</button>
             </form>
+            
 
             <p id="payment-message"></p>
         </div>

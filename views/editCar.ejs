@@ -1,5 +1,7 @@
-<%- include('partials/head', { title: "Edit Car", pageStyle: "css/admin.css" }) %>
+<%- include('partials/head', { title: "Edit Car | CarGo", pageStyle: "css/editCar.css" }) %>
 <body>
+    <%- include('partials/adminnav') %>
+    <div class="content-wrapper">
     <h2>Edit Car</h2>
     <form action="/admin/cars/edit/<%= car.id %>" method="POST">
         <label>Brand:</label>
@@ -17,7 +19,7 @@
         <button type="submit">Save Changes</button>
     </form>
     <a href="/admin/cars">Back to Car List</a>
-
+    </div>
     <%- include('partials/footer') %>
 </body>
 </html>

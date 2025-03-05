@@ -3,6 +3,9 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
+     min-height: 100vh;
+ display: flex; 
+      flex-direction: column;
 }
 
 .navbar {
@@ -63,87 +66,69 @@ body {
     background: #1f2937;
 }
 
-.booking-page {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.admin-dashboard {
+    flex: 1;
     padding: 100px 50px 50px;
-    min-height: calc(100vh - 80px);
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-.car-details-container {
-    background: rgba(255, 255, 255, 0.9);
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    width: 45%;
-    margin-right: 20px;
-}
-
-.car-details-container img {
-    width: 100%;
-    border-radius: 8px;
-    max-height: 300px;
-    object-fit: cover;
-}
-
-.car-info h2 {
-    margin-top: 15px;
-    font-size: 24px;
+h2 {
     color: #111827;
-}
-
-.car-info p {
-    font-size: 18px;
-    color: #4b5563;
-}
-
-.booking-form-container {
-    background: rgba(255, 255, 255, 0.9);
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    width: 45%;
-}
-
-.booking-form-container h2 {
-    text-align: center;
+    font-size: 28px;
     margin-bottom: 20px;
-    color: #111827;
 }
 
-.booking-form-container form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-radius: 5px;
+    overflow: hidden;
 }
 
-.booking-form-container label {
-    font-size: 16px;
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+th {
+    background-color: #f8f9fa;
     font-weight: bold;
     color: #111827;
 }
 
-.booking-form-container input {
-    padding: 10px;
-    border: 1px solid #d1d5db;
-    border-radius: 5px;
-    font-size: 16px;
+.action-buttons {
+    display: flex;
+    gap: 5px;
 }
 
-.booking-form-container button {
-    padding: 12px;
-    background: #111827;
-    color: white;
+.approve-btn, .reject-btn {
+    flex: 1;
+    padding: 8px 15px;
     border: none;
     border-radius: 5px;
-    font-size: 18px;
     cursor: pointer;
-    transition: 0.3s;
+    font-weight: bold;
+    transition: background 0.3s ease;
+    text-align: center;
+    min-width: 80px; /* Adjust this value as needed */
 }
 
-.booking-form-container button:hover {
-    background: #1f2937;
+.approve-btn {
+    background: #111827;
+    color: white;
+}
+
+.reject-btn {
+    background: #dc3545;
+    color: white;
+}
+
+.approve-btn:hover, .reject-btn:hover {
+    opacity: 0.8;
 }
 
 footer {
@@ -155,6 +140,7 @@ footer {
     bottom: 0;
     width: 100%;
     box-sizing: border-box;
+    margin-top: auto;
 }
 
 .menu-toggle {
@@ -167,15 +153,35 @@ footer {
 }
 
 @media (max-width: 768px) {
-    .booking-page {
-        flex-direction: column;
-        align-items: center;
+    .admin-dashboard {
         padding: 80px 20px 20px;
     }
 
-    .car-details-container, .booking-form-container {
+    table {
+        font-size: 14px;
+    }
+
+    .approve-btn, .reject-btn {
+        padding: 6px 12px;
+        font-size: 14px;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .nav-links {
+        display: none;
+        flex-direction: column;
         width: 100%;
-        margin-right: 0;
-        margin-bottom: 20px;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 20px;
+    }
+
+    .nav-links.active {
+        display: flex;
     }
 }

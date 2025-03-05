@@ -1,8 +1,11 @@
 body {
-    font-family: 'Fira Code', sans-serif;
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .navbar {
@@ -63,75 +66,26 @@ body {
     background: #1f2937;
 }
 
-
-.bookings-page {
+.content-wrapper {
+    flex: 1;
     padding: 100px 50px 50px;
     max-width: 1200px;
     margin: 0 auto;
 }
 
-h2 {
-    color: #111827;
-    font-size: 28px;
-    margin-bottom: 20px;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    border-radius: 5px;
-    overflow: hidden;
-}
-
-th, td {
-    padding: 15px;
-    text-align: left;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-th {
-    background-color: #f8f9fa;
-    font-weight: bold;
-    color: #111827;
-}
-
-.status-text {
-    padding: 5px 10px;
-    border-radius: 15px;
-    font-weight: bold;
-}
-
-.cancelled-text, .rejected-text {
-    background-color: #FFCCCB;
-    color: #D8000C;
-}
-
-.pending-text {
-    background-color: #FFF3CD;
-    color: #856404;
-}
-
-.confirmed-text {
-    background-color: #e8f0fe;
-    color: #27375a;
-}
-
 .btn {
     display: inline-block;
-    padding: 8px 15px;
+    padding: 10px 20px;
     border-radius: 5px;
     text-decoration: none;
     font-weight: bold;
     transition: background 0.3s ease;
-    margin: 5px;
+    margin: 20px 0;
 }
 
 .btn-primary {
-    background: #27375a;
+    background: #111827;
     color: white;
-    font-size: 14px;
 }
 
 .btn-secondary {
@@ -148,27 +102,30 @@ th {
     opacity: 0.8;
 }
 
-.edit-booking-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.edit-booking-form input[type="date"] {
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-}
-
-.refunds-section {
-    margin-top: 50px;
-}
-
-.booking-action-buttons {
-    display: flex;
-    justify-content: space-between;
+table {
     width: 100%;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: #111827;
+}
+
+td form {
+    display: inline;
 }
 
 footer {
@@ -176,10 +133,7 @@ footer {
     padding: 15px;
     background: rgba(255, 255, 255, 0.9);
     color: #111827;
-    position: relative;
-    bottom: 0;
-    width: 100%;
-    box-sizing: border-box;
+    margin-top: auto;
 }
 
 .menu-toggle {
@@ -192,7 +146,7 @@ footer {
 }
 
 @media (max-width: 768px) {
-    .bookings-page {
+    .content-wrapper {
         padding: 80px 20px 20px;
     }
 
@@ -201,11 +155,7 @@ footer {
     }
 
     .btn {
-        width: 100%; /* Full width on small screens */
-        margin: 5px 0;
-    }
-
-    .booking-action-buttons {
-        flex-direction: column;
+        padding: 8px 15px;
+        font-size: 14px;
     }
 }

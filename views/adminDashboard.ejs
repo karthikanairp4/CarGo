@@ -1,16 +1,13 @@
-<%- include('partials/head', { title: "Admin Dashboard | Car Rental", pageStyle: "css/admin.css" }) %>
+<%- include('partials/head', { title: "Admin Dashboard | CarGo", pageStyle: "css/admin.css" }) %>
 <body>
+    <%- include('partials/adminnav') %>
     <section class="admin-dashboard">
-        <h2>Admin Dashboard - Pending Requests</h2>
-        <nav>
-            <a href="/admin/dashboard">Bookings</a>
-            <a href="/admin/cars">Manage Cars</a>
-        </nav>
+        <h2>Pending Requests</h2>
         
         <table>
             <thead>
                 <tr>
-                    <th>Booking ID</th>
+                    <!-- <th>Booking ID</th> -->
                     <th>User</th>
                     <th>Car</th>
                     <th>Current Dates</th>
@@ -26,7 +23,7 @@
                 <% } else { %>
                     <% pendingRequests.forEach(request => { %>
                         <tr>
-                            <td><%= request.id %></td>
+                            <!-- <td><%= request.id %></td> -->
                             <td><%= request.User.email %></td>
                             <td><%= request.Car.brand %> - <%= request.Car.model %></td>
                             <td><%= request.start_date %> to <%= request.end_date %></td>
@@ -40,6 +37,7 @@
                             <td>$<%= request.total_price %></td>
                             <td><%= request.request_status %></td>
                             <td>
+                                <div class="action-buttons">
                                 <form action="/admin/approve-request" method="POST">
                                     <input type="hidden" name="booking_id" value="<%= request.id %>">
                                     <button type="submit" class="approve-btn">Approve</button>
@@ -48,6 +46,7 @@
                                     <input type="hidden" name="booking_id" value="<%= request.id %>">
                                     <button type="submit" class="reject-btn">Reject</button>
                                 </form>
+                            </div>
                             </td>
                         </tr>
                     <% }) %>
@@ -59,6 +58,16 @@
     </section>
     <%- include('partials/footer') %>
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+
+        menuToggle.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+        });
+    });
+    </script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         document.querySelectorAll(".approve-btn, .reject-btn").forEach(button => {

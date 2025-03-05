@@ -7,29 +7,29 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const Payment = require('../models/Payment');
 
-exports.processPayment = async (req, res) => {
-    try {
-        const { car_id, user_id, total_price, start_date, end_date, card_number, expiry_date, cvv } = req.body;
+// exports.processPayment = async (req, res) => {
+//     try {
+//         const { car_id, user_id, total_price, start_date, end_date, card_number, expiry_date, cvv } = req.body;
 
-        // Simulate payment with Stripe
-        const paymentIntent = await stripe.paymentIntents.create({
-            amount: total_price * 100, // Convert to cents
-            currency: 'usd',
-            payment_method_types: ['card'],
-            description: `Payment for Car ID: ${car_id}`,
-        });
+//         // Simulate payment with Stripe
+//         const paymentIntent = await stripe.paymentIntents.create({
+//             amount: total_price * 100, // Convert to cents
+//             currency: 'usd',
+//             payment_method_types: ['card'],
+//             description: `Payment for Car ID: ${car_id}`,
+//         });
 
-        console.log("Payment Intent Created:", paymentIntent);
+//         console.log("Payment Intent Created:", paymentIntent);
 
-        // Redirect to success page
-        res.redirect('/payment/success');
-    } catch (err) {
-        console.error("Payment Failed:", err);
-        res.redirect('/payment/failure');
-    }
-};
+//         // Redirect to success page
+//         res.redirect('/payment/success');
+//     } catch (err) {
+//         console.error("Payment Failed:", err);
+//         res.redirect('/payment/failure');
+//     }
+// };
 
-
+//for populating booking table
 exports.showPaymentPage = async (req, res) => {
     try {
         const { car_id, total_price, start_date, end_date } = req.body;
@@ -83,7 +83,9 @@ exports.showPaymentPage = async (req, res) => {
     }
 };
 
+//Booking page to payment page
 exports.showPaymentPageToComplete = async (req, res) => {
+    
     try {
         const { booking_id } = req.query;
 
@@ -122,7 +124,7 @@ exports.showPaymentPageToComplete = async (req, res) => {
         console.log("✅ Payment Record:", payment.toJSON());
 
         res.render('payment', { 
-            title: "Complete Payment | Car Rental", 
+            title: "Complete Payment | CarGo", 
             car: booking.Car, 
             user_id: booking.user_id,
             total_price: booking.total_price,
@@ -138,59 +140,6 @@ exports.showPaymentPageToComplete = async (req, res) => {
     }
 };
 
-
-
-
-// exports.createPaymentIntent = async (req, res) => {
-
-//     try {
-//         const { booking_id, total_price, zip } = req.body;
-
-//         console.log("🔍 Received Payment Data:", { booking_id, total_price, zip });
-
-//         if (!booking_id) {
-//             console.error("❌ Missing booking_id.");
-//             return res.status(400).json({ error: "Booking ID is required." });
-//         }
-
-//         // Check if booking exists
-//         const booking = await Booking.findByPk(booking_id);
-//         if (!booking) {
-//             console.error("❌ Booking not found.");
-//             return res.status(404).json({ error: "Booking not found." });
-//         }
-        
-
-//         // ✅ Create Stripe Payment Intent
-//         const paymentIntent = await stripe.paymentIntents.create({
-//             amount: total_price * 100, // Convert to cents
-//             currency: 'usd',
-//             payment_method_types: ['card'],
-//             setup_future_usage: 'off_session',
-//             payment_method_options: {
-//                 card: {
-//                     request_three_d_secure: "any", // Forces 3D Secure authentication
-//                 },
-//             },
-//         });
-
-//         // ✅ Save Payment to Database
-//         const payment = await Payment.create({
-//             booking_id: booking.id,
-//             user_id: booking.user_id,
-//             amount: total_price,
-//             payment_status: 'Pending', // Will update after confirmation
-//             transaction_id: paymentIntent.id
-//         });
-
-//         console.log("✅ Payment Record Created:", payment);
-
-//         res.json({ clientSecret: paymentIntent.client_secret, payment_id: payment.id });
-//     } catch (err) {
-//         console.error("❌ Stripe Payment Error:", err);
-//         res.status(500).json({ error: err.message });
-//     }
-// };
 
 exports.createPaymentIntent = async (req, res) => {
     try {
@@ -238,8 +187,6 @@ exports.createPaymentIntent = async (req, res) => {
     }
 };
 
-
-// exports.confirmPayment = async (req, res) => {
 //     try {
 //         const { paymentIntentId } = req.body;
 //         console.log(req.body+"Reuest Body");

@@ -1,4 +1,4 @@
-<%- include('partials/head', { title: "My Bookings | Car Rental", pageStyle: "css/myBookings.css" }) %>
+<%- include('partials/head', { title: "My Bookings | CarGo", pageStyle: "css/myBookings.css" }) %>
 
 <body>
     <%- include('partials/navbar') %>
@@ -27,36 +27,45 @@
                             <td>$<%= booking.total_price %></td>
                             <td>
                                 <% if (booking.status === "Cancelled") { %>
-                                    <span class="status-text cancelled-text">❌ Cancelled</span>
+                                    <span class="status-text cancelled-text">Cancelled</span>
                                 <% } else if (booking.request_status === "Rejected") { %>
-                                    <span class="status-text rejected-text">❌ Edit Rejected</span>
+                                    <span class="status-text rejected-text">Edit Rejected</span>
                                 <% } else if (booking.request_status === "Edit Requested") { %>
-                                    <span class="status-text pending-text">⏳ Edit Pending</span>
+                                    <span class="status-text pending-text">Edit Pending</span>
                                 <% } else if (booking.request_status === "Cancel Requested") { %>
-                                    <span class="status-text pending-text">⏳ Cancel Pending</span>
+                                    <span class="status-text pending-text">Cancel Pending</span>
                                 <% } else { %>
-                                    <span class="status-text confirmed-text">✅ Confirmed</span>
+                                    <span class="status-text confirmed-text">Confirmed</span>
                                 <% } %>
                             </td>
                             <td>
                                 <% if (!booking.Payment || booking.Payment.payment_status === 'pending') { %>
-                                    <a href="/payment/checkout?booking_id=<%= booking.id %>" class="btn btn-primary">💳 Complete Payment</a>
+                                    <a href="/payment/checkout?booking_id=<%= booking.id %>" class="btn btn-primary">Complete Payment</a>
                                 <% } else if (booking.request_status === "Edit Requested" || booking.request_status === "Cancel Requested") { %>
                                     <p>⏳ Request Pending Admin Approval</p>
                                 <% } else { %>
-                                    <form action="/booking/request-edit" method="POST">
+                                    <div class="booking-action-buttons">
+                                    <form action="/booking/request-edit" method="POST" class="edit-booking-form">
                                         <input type="hidden" name="booking_id" value="<%= booking.id %>">
+                                        
+                                        <!-- Store Original Booking Duration -->
+                                        <input type="hidden" name="original_days" value="<%= (new Date(booking.end_date) - new Date(booking.start_date)) / (1000 * 60 * 60 * 24) %>">
+                                    
                                         <label for="new_start_date">New Start Date:</label>
-                                        <input type="date" id="new_start_date_<%= booking.id %>" name="new_start_date" required>
+                                        <input type="date" class="new-start-date" name="new_start_date" required>
+                                        
                                         <label for="new_end_date">New End Date:</label>
-                                        <input type="date" id="new_end_date_<%= booking.id %>" name="new_end_date" required>
+                                        <input type="date" class="new-end-date" name="new_end_date" required>
+                                        
                                         <button type="submit" class="btn btn-secondary">Request Edit</button>
                                     </form>
+                                    
 
                                     <form action="/booking/request-cancel" method="POST">
                                         <input type="hidden" name="booking_id" value="<%= booking.id %>">
-                                        <button type="submit" class="btn btn-danger">❌ Request Cancel</button>
+                                        <button type="submit" class="btn btn-danger">Request Cancel</button>
                                     </form>
+                                    </div>
                                 <% } %>
                             </td>
                         </tr>
@@ -94,19 +103,30 @@
     </section>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            document.querySelectorAll(".inline-form").forEach(form => {
-                form.addEventListener("submit", function (event) {
-                    const startDate = form.querySelector("input[name='new_start_date']");
-                    const endDate = form.querySelector("input[name='new_end_date']");
-
-                    if (startDate && endDate && new Date(endDate.value) <= new Date(startDate.value)) {
-                        event.preventDefault();
-                        alert("❌ End Date must be after Start Date.");
+            document.querySelectorAll(".edit-booking-form").forEach(form => {
+                const startDateField = form.querySelector(".new-start-date");
+                const endDateField = form.querySelector(".new-end-date");
+                const originalDays = parseInt(form.querySelector("input[name='original_days']").value);
+    
+                function validateDateSelection() {
+                    if (!startDateField.value || !endDateField.value) return; // ✅ Only validate if both fields are filled
+                    
+                    const startDate = new Date(startDateField.value);
+                    const endDate = new Date(endDateField.value);
+                    const selectedDays = (endDate - startDate) / (1000 * 60 * 60 * 24);
+    
+                    if (selectedDays !== originalDays) {
+                        alert(`❌ You must select exactly ${originalDays} days.`);
+                        endDateField.value = ""; // ✅ Only clear end date, not start date
                     }
-                });
+                }
+    
+                endDateField.addEventListener("change", validateDateSelection); // ✅ Only trigger validation when end date is selected
             });
         });
     </script>
+    
+    
 
     <%- include('partials/footer') %>
 </body>

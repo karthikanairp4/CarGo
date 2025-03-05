@@ -19,7 +19,7 @@ exports.listAvailableCars = async (req, res) => {
     }
 };
 
-
+// for getting booking page
 exports.showBookingPage = async (req, res) => {
     try {
         const { car_id } = req.params;
@@ -53,48 +53,48 @@ exports.showBookingPage = async (req, res) => {
 
 
 // Process Booking Submission
-exports.processBooking = async (req, res) => {
-    try {
-        const { start_date, end_date, total_price } = req.body;
-        const carId = req.params.id;
+// exports.processBooking = async (req, res) => {
+//     try {
+//         const { start_date, end_date, total_price } = req.body;
+//         const carId = req.params.id;
 
-        // Ensure car exists
-        const car = await Car.findByPk(carId);
-        if (!car) {
-            return res.status(404).send("Car not found");
-        }
+//         // Ensure car exists
+//         const car = await Car.findByPk(carId);
+//         if (!car) {
+//             return res.status(404).send("Car not found");
+//         }
 
-        // Create a new booking
-        await Booking.create({
-            car_id: carId,
-            user_id: req.session.user.id, // Ensure user is logged in
-            start_date,
-            end_date,
-            total_price,
-            status: "Pending"
-        });
+//         // Create a new booking
+//         await Booking.create({
+//             car_id: carId,
+//             user_id: req.session.user.id, // Ensure user is logged in
+//             start_date,
+//             end_date,
+//             total_price,
+//             status: "Pending"
+//         });
 
-        res.redirect('/cars/list'); // Redirect to available cars list
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("Error processing booking");
-    }
-};
+//         res.redirect('/cars/list'); // Redirect to available cars list
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).send("Error processing booking");
+//     }
+// };
 
 // Add a New Car (Admin Only)
-exports.addCar = async (req, res) => {
-    const { model, brand, price_per_day, image } = req.body;
+// exports.addCar = async (req, res) => {
+//     const { model, brand, price_per_day, image } = req.body;
 
-    try {
-        await Car.addCar(model, brand, price_per_day, image);
-        req.flash('success', 'Car added successfully.');
-        res.redirect('/admin/dashboard');
-    } catch (err) {
-        console.error(err);
-        req.flash('error', 'Failed to add car.');
-        res.redirect('/admin/dashboard');
-    }
-};
+//     try {
+//         await Car.addCar(model, brand, price_per_day, image);
+//         req.flash('success', 'Car added successfully.');
+//         res.redirect('/admin/dashboard');
+//     } catch (err) {
+//         console.error(err);
+//         req.flash('error', 'Failed to add car.');
+//         res.redirect('/admin/dashboard');
+//     }
+// };
 
 
 //Admin management

@@ -7,7 +7,7 @@ router.get('/list', carController.listAvailableCars);
 router.get('/book/:car_id', carController.showBookingPage);
 
 // Route to handle booking form submission
-router.post('/book/:id', carController.processBooking);
+// router.post('/book/:id', carController.processBooking);
 
 
 module.exports = router;

@@ -1,6 +1,7 @@
-<%- include('partials/head', { title: "Manage Cars | Admin", pageStyle: "css/admin.css" }) %>
+<%- include('partials/head', { title: "Manage Cars | CarGo", pageStyle: "css/adminCars.css" }) %>
 <body>
-    <h2>Manage Cars</h2>
+    <%- include('partials/adminnav') %>
+    <div class="content-wrapper">
     <a href="/admin/cars/add" class="btn btn-primary">Add New Car</a>
 
     <table>
@@ -30,7 +31,7 @@
             <% }) %>
         </tbody>
     </table>
-
+</div>
     <%- include('partials/footer') %>
 </body>
 </html>

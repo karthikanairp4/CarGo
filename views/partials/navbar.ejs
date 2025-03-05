@@ -1,20 +1,19 @@
 <header>
     <nav class="navbar">
         <div class="logo">CarGo <span class="highlight">O</span></div>
+        <button class="menu-toggle">Menu</button>
         <ul class="nav-links">
             <li><a href="/">Home</a></li>
-            <li><a href="/cars/list">Car Listing</a></li>
+            <li><a href="/cars/list">Cars</a></li>
             <li><a href="/about">About</a></li>
+            <li><a href="/booking/my-bookings">My Bookings</a></li>
            
-            <li><a href="/faq">FAQ</a></li>
+            <!-- <li><a href="/faq">FAQ</a></li> -->
             <li><a href="/contact">Contact Us</a></li>
         </ul>
         <div class="nav-buttons">
             <% if (user) { %>
-                <li><a href="/booking/my-bookings">My Bookings</a></li>
-                <!-- <% if (user.role === 'admin') { %>
-                    <li><a href="/admin/dashboard">Admin Dashboard</a></li>
-                <% } %> -->
+                <!-- <li><a href="/booking/my-bookings">My Bookings</a></li> -->
                 <a href="/auth/logout" class="btn btn-primary">Logout</a>
                 
             <% } else { %>

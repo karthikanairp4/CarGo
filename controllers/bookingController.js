@@ -1,6 +1,5 @@
 const { Booking, Car, Payment } = require('../models');
 
-// exports.getUserBookings = async (req, res) => {
 //     try {
 //         const userId = req.user.id;
 
@@ -73,33 +72,36 @@ exports.getUserBookings = async (req, res) => {
 
 exports.requestBookingEdit = async (req, res) => {
     try {
-        const { booking_id, new_start_date, new_end_date } = req.body;
-
-        if (!booking_id || !new_start_date || !new_end_date) {
-            console.error("❌ Missing required fields");
-            return res.status(400).send("Missing required fields.");
-        }
+        const { booking_id, new_start_date, new_end_date, original_days } = req.body;
 
         const booking = await Booking.findByPk(booking_id);
-
         if (!booking) {
             return res.status(404).json({ message: "Booking not found." });
         }
 
-        // ✅ Store requested new dates in the new columns
+        // Calculate new duration
+        const newDays = (new Date(new_end_date) - new Date(new_start_date)) / (1000 * 60 * 60 * 24);
+
+        // Validate same number of days
+        if (parseInt(original_days) !== newDays) {
+            return res.status(400).json({ message: `❌ You must select exactly ${original_days} days.` });
+        }
+
+        // Update request status for admin approval
+        booking.request_status = "Edit Requested";
         booking.new_start_date = new_start_date;
         booking.new_end_date = new_end_date;
-        booking.request_status = "Edit Requested";
         await booking.save();
 
-        console.log("✅ Booking Edit Requested:", booking.id);
-        res.json({ message: "Edit request submitted. Waiting for admin approval." });
-
-    } catch (error) {
-        console.error("❌ Error requesting booking edit:", error);
+        // res.json({ message: "Edit request submitted for admin approval." });
+        res.redirect("/booking/my-bookings");
+        
+    } catch (err) {
+        console.error("❌ Error requesting booking edit:", err);
         res.status(500).json({ message: "Error processing request." });
     }
 };
+
 
 
 // User Requests Cancellation
@@ -114,7 +116,8 @@ exports.requestBookingCancel = async (req, res) => {
         booking.request_status = "Cancel Requested";
         await booking.save();
 
-        res.json({ message: "Cancellation request sent to admin" });
+        // res.json({ message: "Cancellation request sent to admin" });
+        res.redirect("/booking/my-bookings");
     } catch (error) {
         console.error("Error requesting cancellation:", error);
         res.status(500).send("Error processing request");
