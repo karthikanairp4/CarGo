@@ -8,7 +8,7 @@
         <div class="hero-content">
             <h1>MAKE YOUR RIDE EASY & FAST WITH TURBO RENTAL</h1>
             <p>Rent a car to move from local hosts in 190+ countries.</p>
-            <form class="search-form">
+            <!-- <form class="search-form">
                 <label>Where You From
                     <select>
                         <option>Select Location</option>
@@ -23,7 +23,31 @@
                     <input type="text" placeholder="02/27/2025 - 02/27/2025">
                 </label>
                 <button type="submit">Search</button>
+            </form> -->
+            <form class="search-form" action="/cars/list" method="GET">
+                <label>Where You From
+                    <select name="pickup_location">
+                        <option value="">Select Location</option>
+                        <option value="Toronto">Toronto</option>
+                        <option value="Vancouver">Vancouver</option>
+                        <option value="Montreal">Montreal</option>
+                    </select>
+                </label>
+                <label>Where You Go
+                    <select name="dropoff_location">
+                        <option value="">Select Location</option>
+                        <option value="Toronto">Toronto</option>
+                        <option value="Vancouver">Vancouver</option>
+                        <option value="Montreal">Montreal</option>
+                    </select>
+                </label>
+                <label>Choose Dates
+                    <input type="date" name="start_date" required>
+                    <input type="date" name="end_date" required>
+                </label>
+                <button type="submit">Search</button>
             </form>
+            
         </div>
     </section>
 

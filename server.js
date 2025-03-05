@@ -11,11 +11,22 @@ const paymentRoutes = require('./routes/payment');
 const bookingRoutes = require('./routes/booking');
 const adminRoutes = require("./routes/admin");
 const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
+
 
 require('dotenv').config();
 
 const app = express();
+
+app.use(helmet({
+    contentSecurityPolicy: false, // Disable CSP if using external scripts
+    frameguard: { action: 'deny' }, // Prevent clickjacking
+    xssFilter: true, // Protect against XSS
+    noSniff: true, // Prevent MIME sniffing
+    hidePoweredBy: true // Hide Express from headers
+}));
 app.use(cookieParser());
+
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -47,6 +58,7 @@ app.use('/cars', carRoutes);
 app.use('/payment', paymentRoutes);
 app.use('/booking', bookingRoutes);
 app.use("/admin", adminRoutes);
+
 
 // Start server
 const PORT = process.env.PORT || 3000;

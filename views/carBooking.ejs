@@ -16,6 +16,7 @@
         <div class="booking-form-container">
             <h2>Book Your Car</h2>
             <form action="/payment/checkout" method="POST">
+              
                 <input type="hidden" name="car_id" value="<%= car.id %>">
                 <input type="hidden" name="user_id" value="<%= user ? user.id : '' %>">
             

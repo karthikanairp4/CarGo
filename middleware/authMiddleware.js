@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
+const rateLimit = require('express-rate-limit');
 
 exports.verifyToken = (req, res, next) => {
     const token = req.cookies.token;  // Get token from cookies
@@ -35,22 +36,11 @@ exports.verifyAdmin = (req, res, next) => {
     });
 };
 
-// exports.verifyAdmin = (req, res, next) => {
-//     if (!req.user) {
-//         console.error("❌ No user found in request.");
-//         req.flash('error', 'Unauthorized access.');
-//         return res.redirect('/');
-//     }
-
-//     console.log("🔍 Checking Admin Role:", req.user.role); // Debugging line
-
-//     if (req.user.role !== 'admin') {
-//         req.flash('error', 'Access denied.');
-//         return res.redirect('/');
-//     }
-
-//     next();
-// };
+const registerLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 5, // Limit each IP to 5 requests per window
+    message: "Too many registration attempts. Please try again later."
+});
 
 
 

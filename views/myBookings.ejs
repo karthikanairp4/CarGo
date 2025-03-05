@@ -46,6 +46,7 @@
                                 <% } else { %>
                                     <div class="booking-action-buttons">
                                     <form action="/booking/request-edit" method="POST" class="edit-booking-form">
+                                       
                                         <input type="hidden" name="booking_id" value="<%= booking.id %>">
                                         
                                         <!-- Store Original Booking Duration -->
@@ -62,6 +63,7 @@
                                     
 
                                     <form action="/booking/request-cancel" method="POST">
+                                      
                                         <input type="hidden" name="booking_id" value="<%= booking.id %>">
                                         <button type="submit" class="btn btn-danger">Request Cancel</button>
                                     </form>

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const carController = require('../controllers/carController');
+const { verifyToken, verifyAdmin } = require('../middleware/authMiddleware');
 
 router.get('/list', carController.listAvailableCars);
 
