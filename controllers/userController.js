@@ -29,9 +29,15 @@ exports.registerUser = [
             if (existingUser) {
                 req.flash('error', 'Email already registered');
                 return res.redirect('/auth/register');
+            
             }
 
-            const hashedPassword = await bcrypt.hash(password, 10);
+            // ✅ Generate a salt
+        const saltRounds = 12;  // Recommended value: 10-12 for security
+        const salt = await bcrypt.genSalt(saltRounds);
+
+
+            const hashedPassword = await bcrypt.hash(password, salt);
             await User.create({ name, email, password: hashedPassword });
 
             req.flash('success', 'Registration successful. Please login.');
