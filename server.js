@@ -40,10 +40,17 @@ app.use(session({
 }));
 
 app.use(flash());
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    next();
+});
+
 
 // Set EJS as view engine
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
+
 
 // Middleware to make `user` available in all views
 app.use((req, res, next) => {

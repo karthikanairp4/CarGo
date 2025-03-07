@@ -77,6 +77,27 @@ button[type="submit"]:hover {
     text-decoration: underline;
 }
 
+.flash-message {
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.flash-message.success {
+    background-color: #D1E7DD;
+    color: #0F5132;
+    border: 1px solid #BADBCC;
+}
+
+.flash-message.error {
+    background-color: #F8D7DA;
+    color: #842029;
+    border: 1px solid #F5C2C7;
+}
+
+
 @media (max-width: 480px) {
     .register-container {
         padding: 20px;

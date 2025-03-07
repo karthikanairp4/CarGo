@@ -102,10 +102,12 @@ exports.loginUser = [
 
             // ✅ Redirect based on user role
             if (user.role === 'admin') {
+                req.flash('success', 'Admin login successful.');
                 console.log("✅ Admin Login - Redirecting to Admin Dashboard");
                 return res.redirect('/admin/dashboard'); // Correct redirect for admin
             } else {
                 console.log("✅ User Login - Redirecting to User Dashboard");
+                req.flash('success', 'User login successful.');
                 return res.redirect('/');  // Correct redirect for user
             }
 
