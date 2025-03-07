@@ -112,9 +112,29 @@ button[type="submit"]:hover {
 }
 
 .flash-message.error {
-    background-color: #F8D7DA;
+    background-color: #e8f0fe;
     color: #842029;
     border: 1px solid #F5C2C7;
+}
+
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-container input {
+    width: 100%;
+    padding-right: 30px; /* Space for eye icon */
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #6B7280;
 }
 
 

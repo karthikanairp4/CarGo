@@ -13,7 +13,14 @@
                 <form action="/auth/login" method="POST">
                     
                     <input type="text" name="email" placeholder="Username" required>
-                    <input type="password" name="password" placeholder="Password" required>
+                    <!-- <input type="password" name="password" placeholder="Password" required> -->
+
+                    <div class="password-container">
+                        <input type="password" id="password" name="password" placeholder="Password" required>
+                        <span class="toggle-password" onclick="togglePassword()">
+                            👁
+                        </span>
+                    </div>
 
                     <div class="remember-forgot">
                         <label class="remember-me">
@@ -29,6 +36,16 @@
                 <p class="signup-text">Not a member yet? <a href="/auth/register">Create an account</a></p>
    
     </div>
-
 </body>
+<script>
+    function togglePassword() {
+        const passwordInput = document.getElementById("password");
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+        } else {
+            passwordInput.type = "password";
+        }
+    }
+</script>
+
 </html>
