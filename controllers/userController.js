@@ -68,7 +68,7 @@ exports.loginUser = [
         try {
             const user = await User.findOne({ where: { email } });
             if (!user) {
-                req.flash('error', 'Invalid email or password');
+                req.flash('error', 'User not found. Please register.');
                 return res.redirect('/auth/login');
             }
 
